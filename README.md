@@ -14,10 +14,11 @@ Para publicar via **GitHub Pages**:
 
 ## Funcionalidades
 
-- Formulário de vaga (cargo, departamento, tipo de contrato, modalidade, horário, faixa salarial, requisitos, atividades, benefícios, contato).
+- Formulário de vaga (cargo, departamento, tipo de contrato, modalidade, horário, faixa salarial, requisitos, atividades, benefícios, contato — com opção de um segundo e-mail/link de contato).
 - Toggle entre as duas empresas (SCI-AGRO e GLP Laboratórios), que ajusta automaticamente cidade, logo e benefícios padrão.
+- Logos das duas empresas no topo da página.
 - Geração de texto pronto para publicar (formato completo e formato para redes sociais, com hashtags).
-- Geração e exportação da arte de divulgação em JPG (via html2canvas), no padrão visual da marca.
+- Geração e exportação da arte de divulgação em JPG (via html2canvas), no padrão visual da marca, com plano de fundo em padrão gráfico que cobre a arte inteira independentemente do tamanho do texto da vaga.
 - Lista de vagas salvas, com busca e filtros por empresa, departamento e status (aberta/fechada).
 - Dados salvos no `localStorage` do navegador (não há backend — cada navegador guarda as suas próprias vagas).
 

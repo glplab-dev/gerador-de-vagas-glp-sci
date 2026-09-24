@@ -364,7 +364,8 @@
   }
   .arte-bg-img{
     position:absolute;
-    inset:0;
+    top:0;
+    left:0;
     width:100%;
     height:100%;
     object-fit:cover;
@@ -1477,7 +1478,6 @@ const ARTE_BG_B64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYIAAAN5CAIAA
   });
 
   const MAX_ARTE_W = 1080;
-  const MAX_ARTE_H = 1350;
 
   const arteExportHost = document.getElementById('arteExportHost');
 
@@ -1505,21 +1505,12 @@ const ARTE_BG_B64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYIAAAN5CAIAA
     arteRenderEl.style.marginLeft = '0';
     arteExportHost.appendChild(arteRenderEl);
 
+    // Sem limite de altura: a arte é sempre exportada na largura fixa (1080px)
+    // e na altura natural do conteúdo, sem reduzir a escala nem deixar
+    // margens/faixas em branco nas laterais quando a vaga tem texto longo.
     const alturaNatural = arteRenderEl.offsetHeight;
-    let escala = 1;
-    let alturaFinal = alturaNatural;
-    if(alturaNatural > MAX_ARTE_H){
-      escala = MAX_ARTE_H / alturaNatural;
-      alturaFinal = MAX_ARTE_H;
-    }
-
-    arteExportHost.style.height = alturaFinal + 'px';
-    arteExportHost.style.overflow = 'hidden';
-    arteRenderEl.style.transform = 'scale(' + escala + ')';
-    arteRenderEl.style.transformOrigin = 'top left';
-    if(escala < 1){
-      arteRenderEl.style.marginLeft = ((MAX_ARTE_W - MAX_ARTE_W * escala) / 2) + 'px';
-    }
+    arteExportHost.style.height = alturaNatural + 'px';
+    arteExportHost.style.overflow = 'visible';
 
     function restaurar(){
       arteExportHost.innerHTML = '';

@@ -1478,6 +1478,7 @@ const ARTE_BG_B64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYIAAAN5CAIAA
   });
 
   const MAX_ARTE_W = 1080;
+  const MAX_ARTE_H = 1350; // formato padrão (4:5, o máximo aceito no feed do Instagram)
 
   const arteExportHost = document.getElementById('arteExportHost');
 
@@ -1497,20 +1498,36 @@ const ARTE_BG_B64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYIAAAN5CAIAA
     // clona o elemento (em vez de mover o nó ao vivo) para evitar "flicker"
     // no preview e condições de corrida caso o usuário continue digitando
     const arteRenderEl = inst.render.cloneNode(true);
+    const conteudoEl = arteRenderEl.querySelector('.arte-content');
 
     arteExportHost.innerHTML = '';
     arteExportHost.style.width = MAX_ARTE_W + 'px';
     arteExportHost.style.background = '#f4f4f4';
     arteRenderEl.style.transform = 'none';
     arteRenderEl.style.marginLeft = '0';
+    arteRenderEl.style.height = 'auto';
+    if(conteudoEl){
+      conteudoEl.style.transform = 'none';
+    }
     arteExportHost.appendChild(arteRenderEl);
 
-    // Sem limite de altura: a arte é sempre exportada na largura fixa (1080px)
-    // e na altura natural do conteúdo, sem reduzir a escala nem deixar
-    // margens/faixas em branco nas laterais quando a vaga tem texto longo.
-    const alturaNatural = arteRenderEl.offsetHeight;
-    arteExportHost.style.height = alturaNatural + 'px';
-    arteExportHost.style.overflow = 'visible';
+    // Formato final sempre fixo em 1080x1350 (padrão Instagram, 4:5).
+    // O plano de fundo (.arte-bg-img) preenche esse quadro inteiro sempre,
+    // porque quem é limitado/escalado para caber é só o conteúdo em primeiro
+    // plano (.arte-content) — assim nunca sobra margem/faixa sem imagem
+    // de fundo nas laterais, mesmo com texto de vaga bem longo.
+    const alturaConteudo = conteudoEl ? conteudoEl.offsetHeight : arteRenderEl.offsetHeight;
+    const escala = alturaConteudo > MAX_ARTE_H ? (MAX_ARTE_H / alturaConteudo) : 1;
+
+    arteRenderEl.style.height = MAX_ARTE_H + 'px';
+    arteRenderEl.style.overflow = 'hidden';
+    if(conteudoEl && escala < 1){
+      conteudoEl.style.transform = 'scale(' + escala + ')';
+      conteudoEl.style.transformOrigin = 'top center';
+    }
+
+    arteExportHost.style.height = MAX_ARTE_H + 'px';
+    arteExportHost.style.overflow = 'hidden';
 
     function restaurar(){
       arteExportHost.innerHTML = '';
